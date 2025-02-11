@@ -1,3 +1,6 @@
+## Progression personnelle du TD
+* 1.1 Spin up nodes
+
 # simple-onion-router-network
 
 Your goal for this exercise is to implement a version of the onion routing protocol we saw in module 5.
@@ -57,18 +60,18 @@ Note that not all tests are provided so you can secure a number of points but th
 
 This exercise should be completed individually, you are not allowed to reuse code from other students. Any detected instances of copied code will incur a reduction of your grade.
 
-# Personnal remarks
+# 📝 Personal Remarks
 
-## Explication Spin up nodes
-1️⃣ simpleOnionRouter.ts
+## 🚀 Explanation: Spin Up Nodes
+
+### 1️⃣ `simpleOnionRouter.ts`
 This file defines how a single Onion Router (node) behaves. It is responsible for creating individual onion routing nodes that will later be used in the full network.
 
-✅ Creates an Express server
-Express is a lightweight HTTP server framework that allows us to handle network requests efficiently.
-Each node needs to be an independent server to receive and forward messages.
+#### ✅ Creates an Express Server  
+Each node runs as an independent server using **Express**, a lightweight HTTP framework, to handle network requests efficiently.
 
-✅ Listens on BASE_ONION_ROUTER_PORT + nodeId
-Each node must listen on a unique port so multiple nodes can run simultaneously.
+#### ✅ Listens on `BASE_ONION_ROUTER_PORT + nodeId`  
+Each node must listen on a unique port to allow multiple nodes to run simultaneously.  
 
 We compute the port dynamically using:
 ts
@@ -81,34 +84,40 @@ Node 1 runs on 4001.
 Node 2 runs on 4002.
 This ensures no port conflicts and allows multiple nodes to coexist.
 
-✅ Implements a /status route returning "live"
-The /status route allows us to check if the node is running.
-When we send a request like:
-bash
-'''curl http://localhost:4001/status'''
-We get:
-nginx
-'''live'''
+✅ Implements a /status route returning "live"  
+The /status route allows us to check if the node is running.  
+When we send a request like:  
+bash  
+'''
+curl http://localhost:4001/status
+'''  
+We get:  
+nginx  
+'''
+live
+'''  
 This helps with debugging to ensure nodes are operational.
 
-✅ Starts a server and returns it
+✅ Starts a server and returns it  
 The function spins up an Express server and starts listening for connections.
 Returning the server allows us to keep track of it (e.g., for stopping servers later if needed).
 
-💡 Why is this important?
+💡 Why is this important?  
 This file provides the core functionality for how each router (node) operates in the Onion Routing network.
 
 
-2️⃣ launchOnionRouters.ts
+2️⃣ launchOnionRouters.ts  
 This file creates multiple Onion Router nodes by calling simpleOnionRouter() multiple times.
 
-✅ Loops through n nodes
-We need more than one node to simulate an Onion Routing network.
-Instead of manually starting each node, we use a loop:
-ts
-'''for (let index = 0; index < n; index++) {
+✅ Loops through n nodes  
+We need more than one node to simulate an Onion Routing network.  
+Instead of manually starting each node, we use a loop:  
+ts  
+'''
+for (let index = 0; index < n; index++) {
   simpleOnionRouter(index);
-}'''
+}
+'''
 If n = 3, this loop will:
 Start simpleOnionRouter(0) → Port 4000
 Start simpleOnionRouter(1) → Port 4001
@@ -118,15 +127,17 @@ Start simpleOnionRouter(2) → Port 4002
 Each node is created dynamically with a unique nodeId.
 This makes it easy to scale the network to any number of nodes.
 
-✅ Uses Promise.all(promises) to ensure all servers start before returning
-Why is this necessary?
+✅ Uses Promise.all(promises) to ensure all servers start before returning  
+Why is this necessary?  
 simpleOnionRouter() is async (because listen() takes time).
 We need to make sure all nodes start before we move forward.
-Promise.all() waits for all routers to start before returning.
-ts
-'''const servers = await Promise.all(promises);'''
+Promise.all() waits for all routers to start before returning.  
+ts  
+'''
+const servers = await Promise.all(promises);
+'''  
 This prevents issues where some nodes might not be ready when needed.
 
-💡 Why is this important?
+💡 Why is this important?  
 This function automates node creation instead of requiring manual startup.
 Ensures all nodes are up and running before messages are sent.
