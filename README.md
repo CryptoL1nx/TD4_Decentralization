@@ -1,6 +1,7 @@
 ## Progression personnelle du TD
 * 1.1 Spin up nodes
 * 1.2 Spin up users
+* 1.3 Spin up registry (pb marche pas quand je curl le port 8080 et j'arrive pas à kill le process deja en cours)
 
 # simple-onion-router-network
 
