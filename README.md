@@ -1,5 +1,6 @@
 ## Progression personnelle du TD
 * 1.1 Spin up nodes
+* 1.2 Spin up users
 
 # simple-onion-router-network
 
