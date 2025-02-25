@@ -7,6 +7,7 @@ export async function simpleOnionRouter(nodeId: number, privateKeyBase64: string
   const onionRouter = express();
   onionRouter.use(express.json());
   onionRouter.use(bodyParser.json());
+  //convert private key from base64 to CryptoKey
   const privateKey = await importPrvKey(privateKeyBase64);
 
   // 2.1 Nodes GET Routes to store last received messages and destination
@@ -36,30 +37,36 @@ export async function simpleOnionRouter(nodeId: number, privateKeyBase64: string
 
 
   //Route to receive and process messages
-  onionRouter.post("/message", (req, res) => {
-    const {message, destination} = req.body;
+  //doit etre async pour la fonction await
+  onionRouter.post("/message", async (req, res) => {
+    try {
+      const {message, destination} = req.body;
 
-    if (!message || !destination) {
-      return res.status(400).json({error: "Missing message or destination"});
-    }
+      if (!message || !destination) {
+        return res.status(400).json({error: "Missing message or destination"});
+      }
 
-    //store received encrypted message
-    lastReceivedEncryptedMessage = message;
+      //store received encrypted message
+      lastReceivedEncryptedMessage = message;
 
-    try{
-      //decrypt
+      //use async/await for decryption
       lastReceivedDecryptedMessage = await rsaDecrypt(message, privateKey);
+
+      //store destination
+      lastMessageDestination = destination;
+
+      return res.json({status: "Message received and processed"});
+    
     } catch (error) {
+      console.error("Decryption error:", error);
       return res.status(500).json({error: "Decryption failed"});
     }
-   
-    // store destination
-    lastMessageDestination = destination;
-    
-    res.json({status: "Message received and processed"});
+    //ensures a fallback response : pour pas d'erreur quand on compile typescript
+    //return res.status(500).json({error: "Unexpected error"});
+
   });
 
-  }
+  //}
 
   const server = onionRouter.listen(BASE_ONION_ROUTER_PORT + nodeId, () => {
     console.log(

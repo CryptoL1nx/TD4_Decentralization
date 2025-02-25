@@ -18,17 +18,17 @@ export async function user(userId: number) {
 
   // implement the status route
   _user.get("/status", (req, res) => {
-    res.send("live");
+    return res.send("live");
   });
 
   //route to get the last received message
   _user.get("/getLastReceivedMessage", (req, res) => {
-    res.json({result : lastReceivedMessage});
+    return res.json({result: lastReceivedMessage});
   });
 
   //route to get to the last sent message
   _user.get("/getLastSentMessage", (req, res) => {
-    res.json({result: lastSentMessage});
+    return res.json({result: lastSentMessage});
   });
 
   //route to receive messages
@@ -40,7 +40,7 @@ export async function user(userId: number) {
     }
 
     lastReceivedMessage = message;
-    res.json({status : "Message received"});
+    return res.json({status : "Message received"});
   });
 
   //route to send messages
