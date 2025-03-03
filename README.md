@@ -4,6 +4,8 @@
 * 1.3 Spin up registry (si pb redémarrer ordi et ça marche)
 * 2.1 Nodes' GET routes
 * 2.2 Users' GET routes 
+* 3 à 7
+--> pour l'instant 19/32 validé
 
 # simple-onion-router-network
 
